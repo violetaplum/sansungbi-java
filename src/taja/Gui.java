@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.*;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -167,6 +168,7 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 			tryCount++; // 시도 회수 1 증가
 			removeAnswer(); // 정답처리 메소드 실행
 			endAnswer(); // 모두 정답후 종료 메소드 실행
+			//endAnswer2();
 		}
 	}
 
@@ -196,6 +198,102 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 
 	}
 
+	private void endAnswer2() throws SQLException, ClassNotFoundException {
+		Connection con1 = null;
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		con1 = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","hr","hr");
+		System.out.println("Connected");
+		String insert = "insert into score(id,name,time) values(?,?,?)";
+		String id = new String("201515048");
+		String name = new String("JangHeeSoo");
+		String time = Integer.toString(10);
+		PreparedStatement inps = con1.prepareStatement(insert);
+		inps.setString(1,id);
+		inps.setString(2,name);
+		inps.setString(3,time);
+		int rs = inps.executeUpdate();
+		System.out.println("I Inserted "+rs+"!!");
+
+		String sql = "select name,time from score order by time desc";
+		PreparedStatement ps = con1.prepareStatement(sql);
+		ResultSet rss = ps.executeQuery();
+
+
+
+		while(rss.next())
+		{
+
+		}
+
+		// 게임이 끝났을 때의 메소드(정답을 모두 맞췄을 때)
+		if (arrJlabel[0].isVisible() == false && arrJlabel[1].isVisible() == false && arrJlabel[2].isVisible() == false
+				&& arrJlabel[3].isVisible() == false && arrJlabel[4].isVisible() == false
+				&& arrJlabel[5].isVisible() == false && arrJlabel[6].isVisible() == false
+				&& arrJlabel[7].isVisible() == false && arrJlabel[8].isVisible() == false) { // 모든
+			/* JLabel이 보이지 않으면(즉,완료되면) */
+
+			for (int i = 0; i < arrJlabel.length; i++) {
+				arrJlabel[i].setVisible(true);
+				arrJlabel[i].setFont(new Font("굴림", Font.BOLD, 12));
+				arrJlabel[i].setForeground(Color.BLUE);
+				;
+				arrJlabel[i].setLocation(i * 90, 0);
+			} // 문제로 나왔던 단어들을 게임상단에 표시해 준다
+
+			data_rain.stop(); // 산성비 쓰레드 멈춤
+			total_play_time.stop(); // 시간 타이머 쓰레드 멈춤.
+			correctPercent = Math.round((correctCount / tryCount)
+					* 100); /*
+			 * 명중률을 계산함. 맞은회수/총횟수 * 100해서 소수점 버림
+			 */
+			icon = new ImageIcon("img/background3.jpg"); // 배경을 background3으로
+			// 바꾼다
+
+			resultNumber = new JLabel(studentNumber);
+			resultNumber.setBounds(360, 156, 200, 100);
+			resultNumber.setFont(new Font("굴림", Font.BOLD, 22));
+			resultNumber.setForeground(Color.WHITE);
+			add(resultNumber); // 결과창에 학번레이블을 생성해서 추가한다
+
+			resultName = new JLabel(studentName);
+			resultName.setBounds(360, 206, 200, 100);
+			resultName.setFont(new Font("굴림", Font.BOLD, 22));
+			resultName.setForeground(Color.WHITE);
+			add(resultName);// 결과창에 이름레이블을 생성해서 추가한다
+
+			resultTime = new JLabel((Integer.toString(total_play_time.gamePlayTime) + "초"));
+			/*
+			 * 게임시간을 String으로 바꾸어서 JLabel을 만든다
+			 */
+			resultTime.setBounds(360, 256, 200, 100);
+			resultTime.setFont(new Font("굴림", Font.BOLD, 22));
+			resultTime.setForeground(Color.WHITE);
+			add(resultTime); // 결과창에 시간 레이블을 생성해서 추가한다
+
+			resultAc = new JLabel(Integer.toString(correctPercent) + "%");
+			/*
+			 * 명중률을 String으로 바꾸어서 JLabel을 만든다.
+			 */
+			resultAc.setBounds(360, 306, 200, 100);
+			resultAc.setFont(new Font("굴림", Font.BOLD, 22));
+			resultAc.setForeground(Color.WHITE);
+			add(resultAc); // 결과창에 명중률 레이블을 생성해서 추가한다
+
+			quitButton = new JButton();
+			quitButton.setOpaque(false);
+			quitButton.setBounds(360, 400, 80, 30);
+			add(quitButton);
+			quitButton.addActionListener(this);
+			quitButton.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+			quitButton.setBorderPainted(false);
+			quitButton.setFocusPainted(false);
+			quitButton.setContentAreaFilled(false); // 종료하기 버튼을 만들어서 투명으로 설정한후
+			// ActionListener 추가한다
+			for (int j = 0; j < lifeMark.length; j++) {
+				lifeMark[j].setVisible(false);
+			} // 생명을 보이지 않게 한다
+		}
+	}
 	private void endAnswer() { // 게임이 끝났을 때의 메소드(정답을 모두 맞췄을 때)
 		if (arrJlabel[0].isVisible() == false && arrJlabel[1].isVisible() == false && arrJlabel[2].isVisible() == false
 				&& arrJlabel[3].isVisible() == false && arrJlabel[4].isVisible() == false

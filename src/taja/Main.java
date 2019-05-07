@@ -25,6 +25,15 @@ public class Main extends JFrame {
 		System.out.println("I Inserted "+rs+"!!");
 
 		String sql = "select name,time from score order by time desc";
+		PreparedStatement ps = con1.prepareStatement(sql);
+		ResultSet rss = ps.executeQuery();
+
+
+
+		while(rss.next())
+		{
+
+		}
 
 		con1.close();
 
