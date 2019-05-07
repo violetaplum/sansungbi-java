@@ -9,7 +9,7 @@ public class Main extends JFrame {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 //-----------------------------------------------------------------------DB
-		Connection con1 = null;
+	/*	Connection con1 = null;
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 		con1 = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","hr","hr");
 		System.out.println("Connected");

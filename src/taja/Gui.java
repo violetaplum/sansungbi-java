@@ -197,33 +197,9 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 		 */
 
 	}
-
-	private void endAnswer2() throws SQLException, ClassNotFoundException {
-		Connection con1 = null;
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		con1 = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","hr","hr");
-		System.out.println("Connected");
-		String insert = "insert into score(id,name,time) values(?,?,?)";
-		String id = new String("201515048");
-		String name = new String("JangHeeSoo");
-		String time = Integer.toString(10);
-		PreparedStatement inps = con1.prepareStatement(insert);
-		inps.setString(1,id);
-		inps.setString(2,name);
-		inps.setString(3,time);
-		int rs = inps.executeUpdate();
-		System.out.println("I Inserted "+rs+"!!");
-
-		String sql = "select name,time from score order by time desc";
-		PreparedStatement ps = con1.prepareStatement(sql);
-		ResultSet rss = ps.executeQuery();
-
-
-
-		while(rss.next())
-		{
-
-		}
+//--------------------------------------------------------new GUI
+	private void endAnswer2() throws SQLException, ClassNotFoundException
+	{
 
 		// 게임이 끝났을 때의 메소드(정답을 모두 맞췄을 때)
 		if (arrJlabel[0].isVisible() == false && arrJlabel[1].isVisible() == false && arrJlabel[2].isVisible() == false
@@ -289,11 +265,39 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 			quitButton.setFocusPainted(false);
 			quitButton.setContentAreaFilled(false); // 종료하기 버튼을 만들어서 투명으로 설정한후
 			// ActionListener 추가한다
+			//--------------------------------------------------------------------DB start
+			Connection con1 = null;
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			con1 = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","hr","hr");
+			System.out.println("Connected");
+			String insert = "insert into score(id,name,time) values(?,?,?)";
+			String id = studentNumber;
+			String name = studentName;
+			String time = Integer.toString(total_play_time.gamePlayTime);
+			PreparedStatement inps = con1.prepareStatement(insert);
+			inps.setString(1,id);
+			inps.setString(2,name);
+			inps.setString(3,time);
+			int rs = inps.executeUpdate();
+			System.out.println("I Inserted "+rs+"!!");
+
+			String sql = "select name,time from score order by time desc";
+			PreparedStatement ps = con1.prepareStatement(sql);
+			ResultSet rss = ps.executeQuery();
+
+
+			while(rss.next())
+			{
+
+			}
+			//------------------------------------------------------------------DB end
 			for (int j = 0; j < lifeMark.length; j++) {
 				lifeMark[j].setVisible(false);
 			} // 생명을 보이지 않게 한다
 		}
 	}
+
+//--------------------------------------------------------------new GUI
 	private void endAnswer() { // 게임이 끝났을 때의 메소드(정답을 모두 맞췄을 때)
 		if (arrJlabel[0].isVisible() == false && arrJlabel[1].isVisible() == false && arrJlabel[2].isVisible() == false
 				&& arrJlabel[3].isVisible() == false && arrJlabel[4].isVisible() == false
