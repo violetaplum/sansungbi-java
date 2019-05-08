@@ -296,9 +296,14 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 				do{
 					String showName = rss.getString(1);
 					String showTime = rss.getString(2);
+					str+="이름 : "+showName+" 시간 : "+showTime+"\n";
 				}
 				while(rss.next());
+				String[] strArray = str.split("\n");
+
 			}
+
+			con1.close();
 
 
 
