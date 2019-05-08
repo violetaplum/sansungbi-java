@@ -167,8 +167,12 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == 10) { // 엔터가 눌리면
 			tryCount++; // 시도 회수 1 증가
 			removeAnswer(); // 정답처리 메소드 실행
-			endAnswer(); // 모두 정답후 종료 메소드 실행
-			//endAnswer2();
+			//endAnswer(); // 모두 정답후 종료 메소드 실행
+			try {
+				endAnswer2();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
@@ -198,7 +202,7 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 
 	}
 //--------------------------------------------------------new GUI
-	private void endAnswer2() throws SQLException, ClassNotFoundException
+	private void endAnswer2() throws Exception
 	{
 
 		// 게임이 끝났을 때의 메소드(정답을 모두 맞췄을 때)
@@ -281,15 +285,25 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 			int rs = inps.executeUpdate();
 			System.out.println("I Inserted "+rs+"!!");
 
-			String sql = "select name,time from score order by time desc";
+			String sql = "select name,time from score order by time asc";
 			PreparedStatement ps = con1.prepareStatement(sql);
 			ResultSet rss = ps.executeQuery();
 
+			String str="";
 
-			while(rss.next())
+			if(rss.next())
 			{
-
+				do{
+					String showName = rss.getString(1);
+					String showTime = rss.getString(2);
+				}
+				while(rss.next());
 			}
+
+
+
+
+
 			//------------------------------------------------------------------DB end
 			for (int j = 0; j < lifeMark.length; j++) {
 				lifeMark[j].setVisible(false);
@@ -298,6 +312,7 @@ public class Gui extends JPanel implements ActionListener, KeyListener {
 	}
 
 //--------------------------------------------------------------new GUI
+
 	private void endAnswer() { // 게임이 끝났을 때의 메소드(정답을 모두 맞췄을 때)
 		if (arrJlabel[0].isVisible() == false && arrJlabel[1].isVisible() == false && arrJlabel[2].isVisible() == false
 				&& arrJlabel[3].isVisible() == false && arrJlabel[4].isVisible() == false
